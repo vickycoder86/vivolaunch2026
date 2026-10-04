@@ -10,7 +10,7 @@
   html, body {
     width: 100vw;
     height: 100vh;
-    overflow-x: hidden; /* Allow vertical scroll if needed, prevent horizontal */
+    overflow-x: hidden;
     overflow-y: auto;
     background: radial-gradient(ellipse at center, #0a1a4a 0%, #050a1f 50%, #000000 100%);
     color: #ffffff;
@@ -130,8 +130,8 @@
   }
 
   .product-image {
-    max-width: 60%;
-    max-height: 80%;
+    max-width: 55%;
+    max-height: 70%;
     object-fit: contain;
     filter: drop-shadow(0 0 40px rgba(255,204,0,0.4));
     animation: floatPhone 4s ease-in-out infinite;
@@ -378,7 +378,7 @@
      ========================================= */
   @media (max-width: 768px) {
     html, body {
-      overflow-y: auto; /* CRITICAL FIX: Allows scrolling on small screens so bottom isn't cut off */
+      overflow-y: auto;
     }
     
     .led-wall {
@@ -396,7 +396,7 @@
     }
 
     .top-bar > div:last-child {
-      display: none; /* Hide desktop spacer */
+      display: none;
     }
 
     .vivo-logo { font-size: 22px; }
@@ -409,7 +409,6 @@
       gap: 15px;
     }
 
-    /* Move product image to top and make it compact */
     .product-panel {
       height: 100px;
       order: -1;
@@ -439,7 +438,7 @@
     .bottom-bar {
       flex-direction: column;
       gap: 12px;
-      padding-bottom: 30px; /* Extra space at bottom for safe scrolling */
+      padding-bottom: 30px;
     }
 
     .play-btn {
@@ -453,7 +452,7 @@
       width: 90%;
       padding: 12px;
       font-size: 14px;
-      display: block !important; /* CRITICAL FIX: Force button to show */
+      display: block !important;
     }
 
     .fullscreen-hint { display: none; }
@@ -505,10 +504,10 @@
       </div>
     </div>
 
-    <!-- BOTTOM BAR (Both buttons are now explicitly in the HTML) -->
+    <!-- BOTTOM BAR -->
     <div class="bottom-bar">
       <button class="play-btn" id="playBtn">▶ PLAY</button>
-      
+     
     </div>
   </div>
 
@@ -520,7 +519,7 @@
 
   const numberDisplay = document.getElementById('numberDisplay');
   const playBtn = document.getElementById('playBtn');
-  const resetBtn = document.getElementById('resetBtn'); // Now safely finds the button in HTML
+  const resetBtn = document.getElementById('resetBtn');
   const winnerPanel = document.getElementById('winnerPanel');
   const luckyNumberValue = document.getElementById('luckyNumberValue');
   const bgParticles = document.getElementById('bgParticles');
@@ -555,25 +554,40 @@
     return available;
   }
 
+  // 🌟 NEW: Smooth Deceleration Animation (Slot Machine Effect)
   function rollAnimation(finalNumber, callback) {
     isRolling = true;
     numberDisplay.classList.add('rolling');
     numberDisplay.classList.remove('winner');
     winnerPanel.classList.remove('show');
-    let count = 0;
-    const totalRolls = 35;
-    const interval = setInterval(() => {
+    
+    let currentDelay = 50;  // Start fast (milliseconds)
+    let maxDelay = 350;     // End slow (milliseconds)
+    let rolls = 0;
+    let minRolls = 20;      // Minimum number of spins before it's allowed to stop
+    
+    function rollStep() {
+      // Show a random number during the roll
       numberDisplay.textContent = Math.floor(Math.random() * MAX_NUMBER) + 1;
-      count++;
-      if (count >= totalRolls) {
-        clearInterval(interval);
+      rolls++;
+      
+      // Check if we've rolled enough AND slowed down enough to stop
+      if (rolls >= minRolls && currentDelay >= maxDelay) {
+        // Stop rolling and reveal the winner!
         numberDisplay.classList.remove('rolling');
         numberDisplay.textContent = String(finalNumber).padStart(3, '0');
         numberDisplay.classList.add('winner');
         isRolling = false;
         callback();
+      } else {
+        // Gradually increase the delay to create the slowing-down effect
+        currentDelay += 15;
+        setTimeout(rollStep, currentDelay);
       }
-    }, 70);
+    }
+    
+    // Start the rolling sequence
+    setTimeout(rollStep, currentDelay);
   }
 
   function launchConfetti() {
@@ -595,9 +609,9 @@
       c.animate([
         { transform: `translate(0,0) rotate(0deg)`, opacity: 1 },
         { transform: `translate(${drift}px, 100vh) rotate(${Math.random()*1080}deg)`, opacity: 0 }
-      ], { duration: duration * 1000, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' });
+      ], { duration: duration * 3000, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' });
 
-      setTimeout(() => c.remove(), duration * 1000);
+      setTimeout(() => c.remove(), duration * 3000);
     }
   }
 
@@ -634,18 +648,19 @@
     });
   });
 
-  // CRITICAL FIX: Reset button now safely attaches because it exists in the HTML
-  resetBtn.addEventListener('click', () => {
-    if (winners.length === 0) return;
-    if (confirm('Are you sure you want to reset all winners? This cannot be undone.')) {
-      winners = [];
-      saveWinners();
-      numberDisplay.textContent = '?';
-      numberDisplay.classList.remove('winner');
-      winnerPanel.classList.remove('show');
-      playBtn.disabled = false;
-    }
-  });
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (winners.length === 0) return;
+      if (confirm('Are you sure you want to reset all winners? This cannot be undone.')) {
+        winners = [];
+        saveWinners();
+        numberDisplay.textContent = '?';
+        numberDisplay.classList.remove('winner');
+        winnerPanel.classList.remove('show');
+        playBtn.disabled = false;
+      }
+    });
+  }
 
   // Press 'F' for fullscreen
   document.addEventListener('keydown', (e) => {
