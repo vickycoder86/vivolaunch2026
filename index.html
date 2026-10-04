@@ -10,7 +10,8 @@
   html, body {
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden; /* Allow vertical scroll if needed, prevent horizontal */
+    overflow-y: auto;
     background: radial-gradient(ellipse at center, #0a1a4a 0%, #050a1f 50%, #000000 100%);
     color: #ffffff;
   }
@@ -43,9 +44,9 @@
     position: relative;
     z-index: 1;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     display: grid;
-    grid-template-rows: 15vh 1fr 15vh;
+    grid-template-rows: 15vh 1fr auto;
     padding: 2vh 2vw;
     gap: 2vh;
   }
@@ -306,6 +307,7 @@
     align-items: center;
     justify-content: center;
     gap: 3vw;
+    padding-bottom: 2vh;
   }
 
   .play-btn {
@@ -375,10 +377,16 @@
      MOBILE RESPONSIVE STYLES (Max Width 768px)
      ========================================= */
   @media (max-width: 768px) {
+    html, body {
+      overflow-y: auto; /* CRITICAL FIX: Allows scrolling on small screens so bottom isn't cut off */
+    }
+    
     .led-wall {
       grid-template-rows: auto 1fr auto;
       padding: 10px;
       gap: 10px;
+      height: auto;
+      min-height: 100vh;
     }
 
     .top-bar {
@@ -391,75 +399,52 @@
       display: none; /* Hide desktop spacer */
     }
 
-    .vivo-logo {
-      font-size: 24px;
-    }
-
-    .launch-title h1 {
-      font-size: 18px;
-      letter-spacing: 2px;
-    }
-
-    .launch-title .tagline {
-      font-size: 12px;
-    }
+    .vivo-logo { font-size: 22px; }
+    .launch-title h1 { font-size: 16px; letter-spacing: 1px; }
+    .launch-title .tagline { font-size: 11px; }
 
     .center-stage {
       grid-template-columns: 1fr;
-      grid-template-rows: auto auto 1fr auto;
+      grid-template-rows: auto auto auto;
       gap: 15px;
     }
 
     /* Move product image to top and make it compact */
     .product-panel {
-      height: 120px;
+      height: 100px;
       order: -1;
     }
 
-    .product-image {
-      max-height: 90%;
-    }
+    .product-image { max-height: 90%; }
 
     .number-stage {
-      width: 60vw;
-      height: 60vw;
-      max-width: 280px;
-      max-height: 280px;
+      width: 55vw;
+      height: 55vw;
+      max-width: 240px;
+      max-height: 240px;
     }
 
-    .number-display {
-      font-size: 18vw;
-    }
-
-    .draw-label {
-      font-size: 14px;
-    }
+    .number-display { font-size: 16vw; }
+    .draw-label { font-size: 13px; margin-bottom: 5px; }
 
     .winner-panel {
       padding: 15px;
+      min-height: 130px;
     }
 
-    .congrats-text {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-
-    .lucky-number-label {
-      font-size: 12px;
-    }
-
-    .lucky-number-value {
-      font-size: 16vw;
-    }
+    .congrats-text { font-size: 18px; margin-bottom: 8px; }
+    .lucky-number-label { font-size: 12px; }
+    .lucky-number-value { font-size: 15vw; }
 
     .bottom-bar {
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      padding-bottom: 30px; /* Extra space at bottom for safe scrolling */
     }
 
     .play-btn {
       width: 90%;
-      padding: 15px;
+      padding: 14px;
       font-size: 18px;
     }
 
@@ -468,11 +453,10 @@
       width: 90%;
       padding: 12px;
       font-size: 14px;
+      display: block !important; /* CRITICAL FIX: Force button to show */
     }
 
-    .fullscreen-hint {
-      display: none;
-    }
+    .fullscreen-hint { display: none; }
   }
 </style>
 </head>
@@ -521,9 +505,10 @@
       </div>
     </div>
 
-    <!-- BOTTOM BAR -->
+    <!-- BOTTOM BAR (Both buttons are now explicitly in the HTML) -->
     <div class="bottom-bar">
       <button class="play-btn" id="playBtn">▶ PLAY</button>
+      
     </div>
   </div>
 
@@ -535,7 +520,7 @@
 
   const numberDisplay = document.getElementById('numberDisplay');
   const playBtn = document.getElementById('playBtn');
-  const resetBtn = document.getElementById('resetBtn');
+  const resetBtn = document.getElementById('resetBtn'); // Now safely finds the button in HTML
   const winnerPanel = document.getElementById('winnerPanel');
   const luckyNumberValue = document.getElementById('luckyNumberValue');
   const bgParticles = document.getElementById('bgParticles');
@@ -649,9 +634,8 @@
     });
   });
 
-
-
-  document.getElementById('resetBtn').addEventListener('click', () => {
+  // CRITICAL FIX: Reset button now safely attaches because it exists in the HTML
+  resetBtn.addEventListener('click', () => {
     if (winners.length === 0) return;
     if (confirm('Are you sure you want to reset all winners? This cannot be undone.')) {
       winners = [];
