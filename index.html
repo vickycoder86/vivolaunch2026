@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>VIVO V80 Grand Launch - Lucky Draw</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -38,7 +38,7 @@
     100% { transform: translateY(-10vh) scale(1); opacity: 0; }
   }
 
-  /* Main LED Wall Layout (Optimized for 52ft x 14ft ultra-wide) */
+  /* Main Layout */
   .led-wall {
     position: relative;
     z-index: 1;
@@ -72,9 +72,7 @@
     -webkit-text-fill-color: transparent;
   }
 
-  .launch-title {
-    text-align: center;
-  }
+  .launch-title { text-align: center; }
 
   .launch-title h1 {
     font-size: 5.5vh;
@@ -95,11 +93,9 @@
     margin-top: 0.5vh;
   }
 
-  @keyframes shine {
-    to { background-position: 200% center; }
-  }
+  @keyframes shine { to { background-position: 200% center; } }
 
-  /* CENTER STAGE (3 Columns) */
+  /* CENTER STAGE (3 Columns for Desktop/LED) */
   .center-stage {
     display: grid;
     grid-template-columns: 30fr 40fr 30fr;
@@ -374,6 +370,110 @@
     color: rgba(255,255,255,0.3);
     z-index: 100;
   }
+
+  /* =========================================
+     MOBILE RESPONSIVE STYLES (Max Width 768px)
+     ========================================= */
+  @media (max-width: 768px) {
+    .led-wall {
+      grid-template-rows: auto 1fr auto;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .top-bar {
+      flex-direction: column;
+      gap: 5px;
+      padding: 10px;
+    }
+
+    .top-bar > div:last-child {
+      display: none; /* Hide desktop spacer */
+    }
+
+    .vivo-logo {
+      font-size: 24px;
+    }
+
+    .launch-title h1 {
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    .launch-title .tagline {
+      font-size: 12px;
+    }
+
+    .center-stage {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 15px;
+    }
+
+    /* Move product image to top and make it compact */
+    .product-panel {
+      height: 120px;
+      order: -1;
+    }
+
+    .product-image {
+      max-height: 90%;
+    }
+
+    .number-stage {
+      width: 60vw;
+      height: 60vw;
+      max-width: 280px;
+      max-height: 280px;
+    }
+
+    .number-display {
+      font-size: 18vw;
+    }
+
+    .draw-label {
+      font-size: 14px;
+    }
+
+    .winner-panel {
+      padding: 15px;
+    }
+
+    .congrats-text {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .lucky-number-label {
+      font-size: 12px;
+    }
+
+    .lucky-number-value {
+      font-size: 16vw;
+    }
+
+    .bottom-bar {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .play-btn {
+      width: 90%;
+      padding: 15px;
+      font-size: 18px;
+    }
+
+    .reset-btn {
+      position: static;
+      width: 90%;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    .fullscreen-hint {
+      display: none;
+    }
+  }
 </style>
 </head>
 <body>
@@ -387,7 +487,7 @@
         <h1>VIVO V80 GRAND LAUNCH</h1>
         <div class="tagline">✨ Lucky Draw Contest ✨</div>
       </div>
-      <div style="width: 150px;"></div> <!-- Spacer for balance -->
+      <div style="width: 150px;"></div> <!-- Spacer for desktop balance -->
     </div>
 
     <!-- CENTER STAGE -->
@@ -398,7 +498,6 @@
         <div class="product-fallback">
           <div class="model">VIVO V80</div>
           <div class="sub">ZEISS Portrait So Pro</div>
-          <div class="sub" style="margin-top:2vh; font-size:1.8vh; opacity:0.6;">(Place vivo-v80.png in this folder)</div>
         </div>
       </div>
 
@@ -425,7 +524,6 @@
     <!-- BOTTOM BAR -->
     <div class="bottom-bar">
       <button class="play-btn" id="playBtn">▶ PLAY</button>
-     
     </div>
   </div>
 
@@ -433,7 +531,7 @@
 
 <script>
   const MAX_NUMBER = 600;
-  const STORAGE_KEY = 'vivo_v80_lucky_draw_led_v2';
+  const STORAGE_KEY = 'vivo_v80_lucky_draw_responsive';
 
   const numberDisplay = document.getElementById('numberDisplay');
   const playBtn = document.getElementById('playBtn');
@@ -551,7 +649,9 @@
     });
   });
 
-  resetBtn.addEventListener('click', () => {
+
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
     if (winners.length === 0) return;
     if (confirm('Are you sure you want to reset all winners? This cannot be undone.')) {
       winners = [];
