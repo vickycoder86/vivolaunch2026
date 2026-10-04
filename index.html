@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>VIVO V80 Grand Launch — Lucky Draw</title>
+<title>VIVO V80 Grand Launch - Lucky Draw</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
   html, body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(ellipse at center, #0a1a4a 0%, #050a1f 50%, #000 100%);
-    color: #fff;
+    background: radial-gradient(ellipse at center, #0a1a4a 0%, #050a1f 50%, #000000 100%);
+    color: #ffffff;
   }
 
   /* Floating background particles */
@@ -38,24 +38,24 @@
     100% { transform: translateY(-10vh) scale(1); opacity: 0; }
   }
 
-  /* Main layout - optimized for 52ft x 14ft LED (3.7:1 ratio) */
+  /* Main LED Wall Layout (Optimized for 52ft x 14ft ultra-wide) */
   .led-wall {
     position: relative;
     z-index: 1;
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-rows: 12vh 1fr 14vh;
-    padding: 1.5vh 2vw;
-    gap: 1.5vh;
+    grid-template-rows: 15vh 1fr 15vh;
+    padding: 2vh 2vw;
+    gap: 2vh;
   }
 
-  /* TOP BAR - Branding */
+  /* TOP BAR */
   .top-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 2vw;
+    padding: 0 3vw;
     background: linear-gradient(90deg, rgba(0,212,255,0.1), rgba(255,255,255,0.05), rgba(0,212,255,0.1));
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 20px;
@@ -70,7 +70,6 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 40px rgba(0,212,255,0.5);
   }
 
   .launch-title {
@@ -78,7 +77,7 @@
   }
 
   .launch-title h1 {
-    font-size: 5vh;
+    font-size: 5.5vh;
     font-weight: 900;
     letter-spacing: 4px;
     background: linear-gradient(90deg, #ffcc00, #ffffff, #ffcc00);
@@ -90,45 +89,25 @@
   }
 
   .launch-title .tagline {
-    font-size: 2.2vh;
+    font-size: 2.5vh;
     color: #b0c4ff;
     letter-spacing: 3px;
-    margin-top: 0.3vh;
-  }
-
-  .zeiss-badge {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 2vh;
-    color: #fff;
-    font-weight: 600;
-    letter-spacing: 2px;
-  }
-
-  .zeiss-logo {
-    background: #0044aa;
-    color: #fff;
-    padding: 6px 14px;
-    font-weight: 900;
-    font-size: 2vh;
-    border-radius: 4px;
-    letter-spacing: 2px;
+    margin-top: 0.5vh;
   }
 
   @keyframes shine {
     to { background-position: 200% center; }
   }
 
-  /* CENTER - Main content */
+  /* CENTER STAGE (3 Columns) */
   .center-stage {
     display: grid;
-    grid-template-columns: 28fr 44fr 28fr;
+    grid-template-columns: 30fr 40fr 30fr;
     gap: 2vw;
     align-items: center;
   }
 
-  /* LEFT - VIVO V80 Product Image */
+  /* LEFT: Product Image */
   .product-panel {
     position: relative;
     height: 100%;
@@ -154,30 +133,26 @@
   }
 
   .product-image {
-    max-width: 95%;
-    max-height: 95%;
+    max-width: 60%;
+    max-height: 80%;
     object-fit: contain;
-    filter: drop-shadow(0 0 30px rgba(255,204,0,0.3));
+    filter: drop-shadow(0 0 40px rgba(255,204,0,0.4));
     animation: floatPhone 4s ease-in-out infinite;
   }
 
   @keyframes floatPhone {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-15px); }
   }
 
   .product-fallback {
     text-align: center;
     padding: 20px;
-  }
-
-  .product-fallback .phone-icon {
-    font-size: 15vh;
-    margin-bottom: 10px;
+    display: none;
   }
 
   .product-fallback .model {
-    font-size: 5vh;
+    font-size: 6vh;
     font-weight: 900;
     background: linear-gradient(180deg, #ffcc00, #ff6b6b);
     -webkit-background-clip: text;
@@ -186,13 +161,13 @@
   }
 
   .product-fallback .sub {
-    font-size: 2vh;
+    font-size: 2.5vh;
     color: #b0c4ff;
     letter-spacing: 2px;
-    margin-top: 5px;
+    margin-top: 1vh;
   }
 
-  /* CENTER - Number Display */
+  /* CENTER: Number Display */
   .number-panel {
     display: flex;
     flex-direction: column;
@@ -202,17 +177,17 @@
   }
 
   .draw-label {
-    font-size: 2.5vh;
+    font-size: 3vh;
     letter-spacing: 6px;
     color: #8aa0d0;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .number-stage {
     position: relative;
-    width: 38vh;
-    height: 38vh;
+    width: 40vh;
+    height: 40vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -225,9 +200,7 @@
     background: conic-gradient(from 0deg, #00d4ff, #0066ff, #ff00aa, #ffcc00, #00d4ff);
     padding: 6px;
     animation: rotate 4s linear infinite;
-    box-shadow:
-      0 0 80px rgba(0,212,255,0.6),
-      0 0 160px rgba(0,102,255,0.4);
+    box-shadow: 0 0 80px rgba(0,212,255,0.6), 0 0 160px rgba(0,102,255,0.4);
   }
 
   @keyframes rotate { to { transform: rotate(360deg); } }
@@ -243,7 +216,7 @@
   }
 
   .number-display {
-    font-size: 18vh;
+    font-size: 20vh;
     font-weight: 900;
     line-height: 1;
     background: linear-gradient(180deg, #ffffff 0%, #00d4ff 100%);
@@ -254,13 +227,8 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .number-display.rolling {
-    animation: shake 0.08s infinite;
-  }
-
-  .number-display.winner {
-    animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
+  .number-display.rolling { animation: shake 0.08s infinite; }
+  .number-display.winner { animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
   @keyframes shake {
     0%,100% { transform: translateX(0); }
@@ -274,7 +242,7 @@
     100% { transform: scale(1); opacity: 1; filter: blur(0); }
   }
 
-  /* RIGHT - Winner Announcement */
+  /* RIGHT: Winner Announcement */
   .winner-panel {
     height: 100%;
     display: flex;
@@ -284,10 +252,10 @@
     background: linear-gradient(145deg, rgba(255,204,0,0.08), rgba(255,107,107,0.05));
     border: 2px solid rgba(255,204,0,0.2);
     border-radius: 24px;
-    padding: 2vh;
+    padding: 3vh;
     text-align: center;
     backdrop-filter: blur(10px);
-    opacity: 0.3;
+    opacity: 0.2;
     transition: all 0.6s;
   }
 
@@ -298,11 +266,11 @@
 
   @keyframes glowPulse {
     0%, 100% { box-shadow: 0 0 40px rgba(255,204,0,0.3); border-color: rgba(255,204,0,0.4); }
-    50% { box-shadow: 0 0 80px rgba(255,204,0,0.6); border-color: rgba(255,204,0,0.7); }
+    50% { box-shadow: 0 0 80px rgba(255,204,0,0.6); border-color: rgba(255,204,0,0.8); }
   }
 
   .congrats-text {
-    font-size: 3.5vh;
+    font-size: 4vh;
     font-weight: 900;
     background: linear-gradient(90deg, #ffcc00, #ffffff, #ffcc00);
     -webkit-background-clip: text;
@@ -311,21 +279,21 @@
     background-size: 200% auto;
     animation: shine 2s linear infinite;
     letter-spacing: 2px;
-    line-height: 1.3;
-    margin-bottom: 2vh;
+    line-height: 1.2;
+    margin-bottom: 3vh;
   }
 
   .lucky-number-label {
-    font-size: 2.2vh;
+    font-size: 3vh;
     color: #b0c4ff;
     letter-spacing: 4px;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1vh;
   }
 
   .lucky-number-value {
-    font-size: 12vh;
+    font-size: 14vh;
     font-weight: 900;
     background: linear-gradient(180deg, #ffcc00 0%, #ff6b6b 100%);
     -webkit-background-clip: text;
@@ -336,12 +304,12 @@
     line-height: 1;
   }
 
-  /* BOTTOM BAR - Controls */
+  /* BOTTOM BAR */
   .bottom-bar {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2vw;
+    gap: 3vw;
   }
 
   .play-btn {
@@ -349,29 +317,23 @@
     background-size: 200% auto;
     color: #fff;
     border: none;
-    padding: 2.5vh 6vw;
-    font-size: 3.5vh;
+    padding: 3vh 5vw;
+    font-size: 4vh;
     font-weight: 900;
     border-radius: 50px;
     cursor: pointer;
     letter-spacing: 6px;
     text-transform: uppercase;
-    box-shadow:
-      0 10px 40px rgba(0,102,255,0.5),
-      inset 0 1px 0 rgba(255,255,255,0.3);
+    box-shadow: 0 10px 40px rgba(0,102,255,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
     transition: all 0.3s;
     animation: shimmer 3s linear infinite;
   }
 
-  @keyframes shimmer {
-    to { background-position: 200% center; }
-  }
+  @keyframes shimmer { to { background-position: 200% center; } }
 
   .play-btn:hover:not(:disabled) {
     transform: translateY(-3px) scale(1.02);
-    box-shadow:
-      0 20px 60px rgba(0,102,255,0.7),
-      inset 0 1px 0 rgba(255,255,255,0.4);
+    box-shadow: 0 20px 60px rgba(0,102,255,0.7), inset 0 1px 0 rgba(255,255,255,0.4);
   }
 
   .play-btn:disabled {
@@ -385,18 +347,16 @@
     background: rgba(255,60,60,0.15);
     color: #ff6b6b;
     border: 1px solid rgba(255,60,60,0.3);
-    padding: 1.5vh 2vw;
+    padding: 2vh 2vw;
     border-radius: 25px;
     cursor: pointer;
-    font-size: 1.8vh;
-    font-weight: 600;
+    font-size: 2vh;
+    font-weight: 700;
     letter-spacing: 2px;
     transition: all 0.3s;
   }
 
-  .reset-btn:hover {
-    background: rgba(255,60,60,0.3);
-  }
+  .reset-btn:hover { background: rgba(255,60,60,0.3); }
 
   /* Confetti */
   .confetti {
@@ -406,7 +366,6 @@
     pointer-events: none;
   }
 
-  /* Fullscreen hint */
   .fullscreen-hint {
     position: fixed;
     bottom: 1vh;
@@ -428,9 +387,7 @@
         <h1>VIVO V80 GRAND LAUNCH</h1>
         <div class="tagline">✨ Lucky Draw Contest ✨</div>
       </div>
-      <div class="zeiss-badge">
-        
-      </div>
+      <div style="width: 150px;"></div> <!-- Spacer for balance -->
     </div>
 
     <!-- CENTER STAGE -->
@@ -438,11 +395,10 @@
       <!-- LEFT: Product Image -->
       <div class="product-panel">
         <img src="vivo-v80.jpeg" alt="VIVO V80" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="product-fallback" style="display:none;">
-          <div class="phone-icon"></div>
+        <div class="product-fallback">
           <div class="model">VIVO V80</div>
           <div class="sub">ZEISS Portrait So Pro</div>
-          <div class="sub" style="margin-top:10px; font-size:1.5vh; opacity:0.6;">Place vivo-v80.png in same folder</div>
+          <div class="sub" style="margin-top:2vh; font-size:1.8vh; opacity:0.6;">(Place vivo-v80.png in this folder)</div>
         </div>
       </div>
 
@@ -469,15 +425,15 @@
     <!-- BOTTOM BAR -->
     <div class="bottom-bar">
       <button class="play-btn" id="playBtn">▶ PLAY</button>
-      
+     
     </div>
   </div>
 
-  <div class="fullscreen-hint">Press F11 for Fullscreen</div>
+  <div class="fullscreen-hint">Press 'F' for Fullscreen</div>
 
 <script>
   const MAX_NUMBER = 600;
-  const STORAGE_KEY = 'vivo_v80_lucky_draw_led';
+  const STORAGE_KEY = 'vivo_v80_lucky_draw_led_v2';
 
   const numberDisplay = document.getElementById('numberDisplay');
   const playBtn = document.getElementById('playBtn');
@@ -490,7 +446,7 @@
   let isRolling = false;
 
   function createBgParticles() {
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 30; i++) {
       const p = document.createElement('div');
       p.className = 'particle';
       const size = Math.random() * 8 + 3;
@@ -522,7 +478,7 @@
     numberDisplay.classList.remove('winner');
     winnerPanel.classList.remove('show');
     let count = 0;
-    const totalRolls = 30;
+    const totalRolls = 35;
     const interval = setInterval(() => {
       numberDisplay.textContent = Math.floor(Math.random() * MAX_NUMBER) + 1;
       count++;
@@ -534,17 +490,17 @@
         isRolling = false;
         callback();
       }
-    }, 80);
+    }, 70);
   }
 
   function launchConfetti() {
     const colors = ['#00d4ff', '#0066ff', '#ffffff', '#ffcc00', '#ff6b6b', '#4ade80', '#ff00aa'];
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 200; i++) {
       const c = document.createElement('div');
       c.className = 'confetti';
       c.style.left = Math.random() * 100 + 'vw';
       c.style.background = colors[Math.floor(Math.random() * colors.length)];
-      const size = Math.random() * 14 + 8;
+      const size = Math.random() * 16 + 8;
       c.style.width = size + 'px';
       c.style.height = size + 'px';
       c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
@@ -552,7 +508,7 @@
       document.body.appendChild(c);
 
       const duration = Math.random() * 3 + 2.5;
-      const drift = (Math.random() - 0.5) * 400;
+      const drift = (Math.random() - 0.5) * 500;
       c.animate([
         { transform: `translate(0,0) rotate(0deg)`, opacity: 1 },
         { transform: `translate(${drift}px, 100vh) rotate(${Math.random()*1080}deg)`, opacity: 0 }
@@ -607,7 +563,7 @@
     }
   });
 
-  // Auto fullscreen hint - press F to toggle
+  // Press 'F' for fullscreen
   document.addEventListener('keydown', (e) => {
     if (e.key === 'f' || e.key === 'F') {
       if (!document.fullscreenElement) {
