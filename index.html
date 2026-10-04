@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VIVO Lucky Draw Contest</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+
+  body {
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top, #0a1a4a 0%, #050a1f 50%, #000 100%);
+    color: #fff;
+    overflow-x: hidden;
+    padding: 20px;
+    position: relative;
+  }
+
+  /* Floating background particles */
+  .bg-particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    background: radial-gradient(circle, rgba(0,212,255,0.6), transparent 70%);
+    border-radius: 50%;
+    animation: float linear infinite;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 30px 0 40px;
+  }
+
+  .vivo-logo {
+    display: inline-block;
+    font-size: 52px;
+    font-weight: 900;
+    letter-spacing: 8px;
+    background: linear-gradient(180deg, #ffffff 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 60px rgba(0,212,255,0.5);
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .vivo-logo::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+    border-radius: 2px;
+  }
+
+  .contest-badge {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 8px 22px;
+    background: linear-gradient(135deg, rgba(255,204,0,0.15), rgba(255,107,107,0.15));
+    border: 1px solid rgba(255,204,0,0.4);
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #ffcc00;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+
+  .title {
+    font-size: clamp(26px, 4.5vw, 42px);
+    font-weight: 800;
+    margin-top: 20px;
+    background: linear-gradient(90deg, #00d4ff, #ffffff, #00d4ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: shine 3s linear infinite;
+  }
+
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
+
+  .subtitle {
+    color: #8aa0d0;
+    font-size: 15px;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* Main draw area */
+  .draw-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 30px;
+    padding: 50px 25px 60px;
+    text-align: center;
+    backdrop-filter: blur(20px);
+    box-shadow:
+      0 30px 80px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .draw-card::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: conic-gradient(from 0deg, transparent, #00d4ff, transparent 30%);
+    border-radius: 30px;
+    z-index: -1;
+    animation: rotate 6s linear infinite;
+    opacity: 0.5;
+  }
+
+  @keyframes rotate { to { transform: rotate(360deg); } }
+
+  /* Number display with glow ring */
+  .number-stage {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glow-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #00d4ff, #0066ff, #ff00aa, #00d4ff);
+    padding: 4px;
+    animation: rotate 4s linear infinite;
+    box-shadow:
+      0 0 60px rgba(0,212,255,0.5),
+      0 0 120px rgba(0,102,255,0.3);
+  }
+
+  .glow-ring-inner {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 30%, #0a1a4a, #000);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .number-display {
+    font-size: 110px;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(180deg, #ffffff 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 4px;
+    transition: transform 0.3s;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .number-display.rolling {
+    animation: shake 0.08s infinite;
+  }
+
+  .number-display.winner {
+    animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.3); opacity: 0; filter: blur(10px); }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0); }
+  }
+
+  .draw-label {
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: #8aa0d0;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+
+  /* Play button */
+  .play-btn {
+    background: linear-gradient(135deg, #00d4ff 0%, #0066ff 50%, #00d4ff 100%);
+    background-size: 200% auto;
+    color: #fff;
+    border: none;
+    padding: 20px 70px;
+    font-size: 20px;
+    font-weight: 800;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    box-shadow:
+      0 10px 40px rgba(0,102,255,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.3);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    animation: shimmer 3s linear infinite;
+  }
+
+  @keyframes shimmer {
+    to { background-position: 200% center; }
+  }
+
+  .play-btn:hover:not(:disabled) {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow:
+      0 20px 50px rgba(0,102,255,0.7),
+      inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+
+  .play-btn:active:not(:disabled) { transform: translateY(0) scale(1); }
+
+  .play-btn:disabled {
+    background: #333;
+    cursor: not-allowed;
+    box-shadow: none;
+    animation: none;
+  }
+
+  /* Winner announcement */
+  .winner-announcement {
+    margin-top: 40px;
+    padding: 30px 20px;
+    background: linear-gradient(145deg, rgba(255,204,0,0.1), rgba(255,107,107,0.05));
+    border: 2px solid rgba(255,204,0,0.3);
+    border-radius: 20px;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+
+  .winner-announcement.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(255,204,0,0.3); }
+    50% { box-shadow: 0 0 60px rgba(255,204,0,0.6); }
+  }
+
+  .congrats-text {
+    font-size: clamp(20px, 4vw, 32px);
+    font-weight: 800;
+    background: linear-gradient(90deg, #ffcc00, #ffffff, #ffcc00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: shine 2s linear infinite;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+  }
+
+  .lucky-number-label {
+    font-size: 14px;
+    color: #b0c4ff;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .lucky-number-value {
+    font-size: clamp(60px, 12vw, 100px);
+    font-weight: 900;
+    background: linear-gradient(180deg, #ffcc00 0%, #ff6b6b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 6px;
+    text-shadow: 0 0 40px rgba(255,204,0,0.4);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Footer with reset */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .reset-btn {
+    background: rgba(255,60,60,0.15);
+    color: #ff6b6b;
+    border: 1px solid rgba(255,60,60,0.3);
+    padding: 10px 22px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+  }
+
+  .reset-btn:hover {
+    background: rgba(255,60,60,0.3);
+    transform: translateY(-2px);
+  }
+
+  .copyright {
+    color: #4a5a80;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* Confetti */
+  .confetti {
+    position: fixed;
+    top: -20px;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    .number-stage { width: 220px; height: 220px; }
+    .number-display { font-size: 80px; }
+    .play-btn { padding: 16px 50px; font-size: 17px; letter-spacing: 3px; }
+    .vivo-logo { font-size: 40px; letter-spacing: 6px; }
+  }
+</style>
+</head>
+<body>
+  <!-- Floating background particles -->
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="vivo-logo">vivo</div>
+      <div class="contest-badge">✨ Lucky Contest 2026 ✨</div>
+      <h1 class="title">Win a Brand New Vivo Mobile!</h1>
+      <p class="subtitle">Your lucky number awaits — from 1 to 600</p>
+    </div>
+
+    <!-- Draw Card -->
+    <div class="draw-card">
+      <div class="draw-label">🎯 Your Lucky Number</div>
+      <div class="number-stage">
+        <div class="glow-ring">
+          <div class="glow-ring-inner">
+            <div class="number-display" id="numberDisplay">?</div>
+          </div>
+        </div>
+      </div>
+      <button class="play-btn" id="playBtn">▶ PLAY</button>
+
+      <!-- Winner Announcement -->
+      <div class="winner-announcement" id="winnerAnnouncement">
+        <div class="congrats-text">🎉🎉🎉 Congratulations Winner 🎉🎉🎉</div>
+        <div class="lucky-number-label">Lucky Number</div>
+        <div class="lucky-number-value" id="luckyNumberValue">000</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <button class="reset-btn" id="resetBtn">🔄 Reset All</button>
+      
+    </div>
+  </div>
+
+<script>
+  const MAX_NUMBER = 600;
+  const STORAGE_KEY = 'vivo_lucky_draw_winners_v3';
+
+  const numberDisplay = document.getElementById('numberDisplay');
+  const playBtn = document.getElementById('playBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const winnerAnnouncement = document.getElementById('winnerAnnouncement');
+  const luckyNumberValue = document.getElementById('luckyNumberValue');
+  const bgParticles = document.getElementById('bgParticles');
+
+  let winners = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let isRolling = false;
+
+  // Create floating background particles
+  function createBgParticles() {
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 6 + 2;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+      p.style.animationDelay = Math.random() * 15 + 's';
+      bgParticles.appendChild(p);
+    }
+  }
+
+  function saveWinners() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(winners));
+  }
+
+  function getAvailableNumbers() {
+    const drawn = new Set(winners.map(w => w.number));
+    const available = [];
+    for (let i = 1; i <= MAX_NUMBER; i++) {
+      if (!drawn.has(i)) available.push(i);
+    }
+    return available;
+  }
+
+  function rollAnimation(finalNumber, callback) {
+    isRolling = true;
+    numberDisplay.classList.add('rolling');
+    numberDisplay.classList.remove('winner');
+    winnerAnnouncement.classList.remove('show');
+    let count = 0;
+    const totalRolls = 28;
+    const interval = setInterval(() => {
+      numberDisplay.textContent = Math.floor(Math.random() * MAX_NUMBER) + 1;
+      count++;
+      if (count >= totalRolls) {
+        clearInterval(interval);
+        numberDisplay.classList.remove('rolling');
+        numberDisplay.textContent = String(finalNumber).padStart(3, '0');
+        numberDisplay.classList.add('winner');
+        isRolling = false;
+        callback();
+      }
+    }, 75);
+  }
+
+  function launchConfetti() {
+    const colors = ['#00d4ff', '#0066ff', '#ffffff', '#ffcc00', '#ff6b6b', '#4ade80', '#ff00aa'];
+    for (let i = 0; i < 120; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      const size = Math.random() * 10 + 6;
+      c.style.width = size + 'px';
+      c.style.height = size + 'px';
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.boxShadow = `0 0 ${size}px ${c.style.background}`;
+      document.body.appendChild(c);
+
+      const duration = Math.random() * 2.5 + 2;
+      const drift = (Math.random() - 0.5) * 300;
+      c.animate([
+        { transform: `translate(0,0) rotate(0deg)`, opacity: 1 },
+        { transform: `translate(${drift}px, 100vh) rotate(${Math.random()*1080}deg)`, opacity: 0 }
+      ], { duration: duration * 1000, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' });
+
+      setTimeout(() => c.remove(), duration * 1000);
+    }
+  }
+
+  function showWinnerAnnouncement(number) {
+    luckyNumberValue.textContent = String(number).padStart(3, '0');
+    winnerAnnouncement.classList.add('show');
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (isRolling) return;
+    const available = getAvailableNumbers();
+    if (available.length === 0) {
+      alert('All 600 numbers have been drawn! Please reset to start again.');
+      return;
+    }
+
+    playBtn.disabled = true;
+    const randomIndex = Math.floor(Math.random() * available.length);
+    const winningNumber = available[randomIndex];
+
+    rollAnimation(winningNumber, () => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+      winners.push({ number: winningNumber, time: timeStr });
+      saveWinners();
+      showWinnerAnnouncement(winningNumber);
+      launchConfetti();
+      playBtn.disabled = false;
+
+      if (winners.length >= MAX_NUMBER) {
+        playBtn.disabled = true;
+        setTimeout(() => alert('🎉 All numbers drawn! Contest complete.'), 500);
+      }
+    });
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (winners.length === 0) return;
+    if (confirm('Are you sure you want to reset all winners? This cannot be undone.')) {
+      winners = [];
+      saveWinners();
+      numberDisplay.textContent = '?';
+      numberDisplay.classList.remove('winner');
+      winnerAnnouncement.classList.remove('show');
+      playBtn.disabled = false;
+    }
+  });
+
+  // Init
+  createBgParticles();
+</script>
+</body>
+</html>
